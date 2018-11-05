@@ -1,0 +1,175 @@
+
+bledy: przeszukiwanie programu,
+       pozycjonowanie kursor - wpisywanie czasu, modyfikowanie programow
+
+testowanie:  wyswietlacz, 
+
+Organizacja pamieci: EEPROM
+
+0x00:  not used (see ATMEL errate)
+
+0x01:       program.number
+0x02:       program.calendar
+0x03:       program.enabled
+
+0x04:       pin code char 1-st
+0x05:       pin code char 2-nd
+0x06:       pin code char 3-rd
+0x07:       pin code char 4-th
+
+0x08-0xFF:  not used
+
+0x100:		1-st program
+	0x13C:   0xFE - koniec programu
+	0x13D:   0xFE - koniec programu
+	0x13E:   0xFE - koniec programu
+	0x13F:   0xFE - koniec programu
+0x140:      2-nd program
+0x180:      3-rd program
+0x1C0:      4-th program
+
+
+
+   Rozk³ad przycisków:
+      [7]   [8]    [9]       [A]
+      [4]   [5]    [6]       [B]
+      [1]   [2]    [3]       [C]
+     [OK]   [0]  [ANULUJ]    [D]
+
+   Opis klawiszy:
+     OK - akceptowanie wprowadzonych zmian
+     ANULUJ - odrzucanie wprowadzonych zmian
+
+     A - program 1; niewykorzystane
+     B - program 2; niewykorzystane
+     C - program 3; niewykorzystane
+     D - program 4; po przytrzymaniu reinicjalizacja wyswietlacza LCD
+
+     0 - klawisz 0; natychmiastowa blokada klawiatury            x
+     1 - klawisz 1; ustawianie czasu                             x (-pozycjonowanie kursora)
+     2 - klawisz 2; ustawianie daty                              x
+     3 - klawisz 3; modyfikowanie programow                      -
+     4 - klawisz 4; ustaw program                                x
+     5 - klawisz 5; zmienianie kodu dostêpu                      x
+     6 - klawisz 6; wylaczenie dzwonka                           x
+     7 - klawisz 7; prze³adowywanie ustawieñ                     x
+     8 - klawisz 8; ustalanie aktywnych dni                      x
+     9 - klawisz 9; o dzwonku                                    x
+
+	obsluga programow jeszcze nie zrobiona
+	poprawic korekcje czasu letniego/zimowego
+
+   Aktywowanie klawiatury:
+      Aktywacja klawiatury jest automatyczna. Wystarczy nacisnac
+   dowolny klawisz. Nastepnie nalezy wprowadzic cztero cyfrowy PIN
+   aktywujacy obsluge zegara, calosc nalezy potwierdzic klawiszem [OK].
+
+   Wybieranie funkcji:
+      Po wpisaniu kodu PIN, zostanie wyswietlony tekst na wyswietlaczu
+   opisujacy klawisze zegara i funkcje pod nimi ukryte. Opis klawiszy
+   znajduje sie powyzej.
+
+   Klawisz 0 - natychmiastowa blokada klawiatury:
+      Kiedy juz skonczymy konfigurowac zegar, mozemy wybrac te funkcje
+   w celu blokady klawiatury i przejsciu do wyswietlania aktualnego
+   czasu. Blokada klawiatury zostanie rowniez wlaczona automatycznie
+   jesli przez dluzszy okres czasu (20-30 sek.) nie zostanie wcisniety
+   jakikolwiek klawisz - jest to zabezpieczenie przed niepowolanym
+   dostepem do konfiguracji zegara, jesli zapomnimy go zablokowac po
+   skonczonej pracy.
+
+   Klawisz 1 - ustawianie czasu:
+      Jak sama nazwa wskazuje ustalamy aktualny czas zegara. Najpierw
+   wpisujemy godziny, pozniej minuty i sekundy. Wszystkie operacje 
+   wykonujemy z klawiatury numerycznej. Po wpisaniu nowych wartosci
+   akceptujemy zmiany klawiszem [OK]. Jesli pomylimy sie podczas wpisywania
+   czasu mozemy skorzystac z klawisza [ANULUJ], ktory bedzie cofal kursor
+   o jedna pozycje wczesniej. Jesli cofniemy sie do poczatku i jeszcze
+   raz wybierzemy [ANULUJ] - wyjdziemy z funkcji ustawiania czasu.
+
+   Klawisz 2 - ustawianie daty:
+      Procedura jest taka sama jak w przypadku czasu, z tym ze teraz
+   zmieniamy rok, miesiac, dzien, i dzien tygodni zamiast godziny, minuty
+   i sekundy.
+
+   Klawisz 3 - synchronizacja z DCF:
+      Funkcja wlacza synchronizacje z zegarem atomowym. Normalnie
+   synchronizacja DCF trwa 1-minutê, jednak jesli wystapia zaklocenia
+   lub brak sygnalu DCF synchronizacja moze potrwac nawet kilka godzin.
+   Dlatego synchronizacja z DCF jest przeprowadzana niezaleznie od zegara,
+   i jesli tylko zostana odebrane poprawne dane DCF nowe wartosci
+   zostana wpisane do zegara. Oprocz recznej synchronizacji DCF zegar
+   jest synchronizowany co tydzien w niedziele o 3:00 rano. Pozwala to
+   na utrzymanie ciagle aktualnego czasu/daty w zegarze.
+
+   Klawisz 4 - ustalanie programu na 8 kolejnych "aktywnych" dni:
+      Zegar posiada tak jakby kalendarz na 8 kolejnych programow.
+   Wprowadzone zmiany tego kalendarza zostaja "wcielone w zycie" dopiero
+   od nastepnego dnia aktywnego, czyli jesli zmiany zostaly wprowadzone
+   np. w piatek, sobote lub niedziele (a aktywne dni to pon,wt,sr,czw,pt),
+   to kalendarz wystartuje od poniedzialku i bedzie trwal az do srody
+   nastepnego tygodnia, po czym zegar pozostanie na ostatnim programie.
+   Po wybraniu tej opcji zegar pyta o kolejne programy na kolejne dni.
+   Program wybieramy klawiszami [A], [B], [C], [D]. Kazdy wybor potwierdzamy
+   przyciskiem OK, jesli chcemy sie cofnac wybieramy ANULUJ, natomiast
+   jesli chcemy wyjsc calkowicie z tej opcji przyciskami klawisz ANULUJ
+   az cofniemy sie do pierwszego programu, po czym kolejne przycisniecie
+   wywola wyjscie z funkcji.
+
+   Klawisz 5 - modyfikowanie programu
+      Program posiada mozliwosc zaprogramowania czterech programow. Kazdy
+   z nich posiada miejsce na 15-lekcji (30-dzwonkow). Na poczatku wybieramy
+   program klawiszami [ABCD], ktory chcemy zmodyfikowac i potwierdzamy [OK].
+   Teraz zegar po kolei bedzie pytal sie o godz. i min. poczatku i konca 
+   kolejnych lekcji. Wszystkie dane wpisujemy z klawiatury numerycznej.
+   Przycisk [ANULUJ] cofa wprowadzone dane, i podobnie jak wczesniej, mozna
+   nim wyjsc rowniez z tej funkcji. Po wpisaniu wszystkich 15-lekcji zegar
+   zapamieta wprowadzone dane. Jesli program ma posiadac tylko np. 12 lekcji
+   to po wprowadzeniu 12-lekcji wybieramy [OK], a gdy pojawi sie pytanie
+   o poczatek 13 lekcji wybieramy  [ANULUJ], wtedy zostaniemy cofnieci do
+   konca lekcji 12-tej. Teraz wybieramy [OK] i nasz program posiada 12 lekcji.
+
+   ***************************************************************************
+   * UWAGA!!! Wprowadzane zmiany zostaja "wprowadzone w zycie" dopiero od    *
+   * nastepnego dnia aktywnego, dotyczy to zarowno modyfikacji programu, jak *
+   * i zmiany aktywnych dni, czy tez zmiany kalendarza. Mozna to jednak      *
+   * ominac wybierajac funkcje spod klawisza A.                              *
+   ***************************************************************************
+
+   Klawisz 6 - ustalenie aktywnych dni
+      Jak juz wczesniej wspomnialem zegar posiada mozliwosc ustalenia aktywnych
+   dni w ktore ma dzwownic. Opcja ta mozemy np. ustawic zegar tak, aby wcale
+   nie dzownil w soboty i niedziele (w weekend lekcji w szkole nie ma , wiec
+   nie ma sensu dzownic). Oczywiscie mozna "wylaczyc" rowniez inne dni. Jednak
+   w zastosowaniu szkolnym nie ma to sensu.
+
+   Klawisz 7 - zmiana kodu dostepu
+      Kod dostepu (kod PIN) jest to kod, ktory nalezy wpisac aby dostac sie do
+   menu glownego zegara. Zmiana kodu polega na dwukrotnym podaniu nowego kodu
+   jesli kody sie zgadzaja - kod dostepu zostaje zmieniony. Nie trzeba podawac
+   starego kodu dostepu, gdyz osoba nie znajaca tego kodu nie mogla sie dostac
+   do menu - wydaje sie to byc oczywiste!
+   
+   Klawisz 8 - wylaczenie dzownienia
+     Czasami jest potrzeba caklowitego wylaczenia zegara, np. podczas wakacji,
+   swiat, ferii. Wylaczenie dzownienia nie wplywa na zmiane zadnych 
+   wczesniejszych ustawien: aktualnego programu, kalendarza, aktywnych dni, itp.
+   Wybierajac to funkcje najpierw zobaczymy jaka jest aktualna wartosc, a pozniej
+   klawiszem [OK], [ANULUJ] wybieramy czy dzwonienie ma byc wlaczone-OK, czy
+   wylaczone-ANULUJ.
+
+   Klawisz 9 - ponownie "przerob" kalendarz
+      Po modyfikacji kalendarza, zostaje on automatycznie wlaczony i ustawiony
+   jego schemat zostaje wykonywany. Jesli natomiast po zakonczeniu kalendarza
+   trzeba bedzie jeszcze raz go uruchomic, to wlasnie do tego celu jest ta opcja.
+
+   Klawisz A - zaladuj wszystkie zmiany
+      Funkcje ta wywoluje wprowadzenie wszystkich zmian od zaraz, dotyczy to
+   zarowno modyfikacji programu, jak i zmiany aktywnych dni, czy tez zmiany
+   kalendarza.
+
+   Klawisz B - niewykorzystane
+   Klawisz C - niewykorzystane
+
+   Klawisz D - informacje o zegarze
+      Zostana wyswietlone informacje o autorze i wersji programu zegara.

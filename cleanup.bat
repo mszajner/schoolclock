@@ -1,0 +1,10 @@
+del *.lst
+del *.o
+del *.hex
+del *.obj
+del *.map
+del *.lst
+del *.*sym
+del *.elf
+del *.cof
+deltree coff
